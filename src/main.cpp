@@ -118,15 +118,15 @@ static void handleCommand(char* packet, CommsHandler& out) {
     }
 
     case 'S': {
-        if (!arming.isArmed()) { out.sendLine("CMD_ERROR:not_armed"); break; }
-        if (strlen(packet) < 3) { out.sendLine("CMD_ERROR:short_packet"); break; }
+        if (!arming.isArmed()) { out.sendLine("CMD_ERROR:not_armed"); Serial.write("CMD_ERROR:not_armed"); break; }
+        if (strlen(packet) < 3) { out.sendLine("CMD_ERROR:short_packet"); Serial.write("CMD_ERROR:short_packet"); break; }
 
         unsigned chan = 0, state = 0;
         char ch = packet[1];
         if      (ch >= '0' && ch <= '9') chan = ch - '0';
         else if (ch >= 'A' && ch <= 'F') chan = 10 + (ch - 'A');
         else if (ch >= 'a' && ch <= 'f') chan = 10 + (ch - 'a');
-        else { out.sendLine("CMD_ERROR:bad_channel"); break; }
+        else { out.sendLine("CMD_ERROR:bad_channel"); Serial.write("CMD_ERROR:bad_channel"); break; }
 
         state = packet[2] - '0';
         if (state > 1) { out.sendLine("CMD_ERROR:bad_state"); break; }
